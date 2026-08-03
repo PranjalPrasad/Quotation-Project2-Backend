@@ -18,5 +18,5 @@ public interface QuotationService {
     QuotationResponseDto convertToInvoice(Long id, ConvertToInvoiceRequestDto requestDto, String authHeader);
     QuotationResponseDto duplicateQuotation(Long id, String authHeader);
     void deleteQuotation(Long id, String authHeader);
-    void processExpiredQuotations();
+    void processExpiredQuotations(); // <-- ADD THIS METHOD
 }

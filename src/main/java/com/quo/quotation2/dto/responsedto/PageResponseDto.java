@@ -8,12 +8,21 @@ public class PageResponseDto<T> {
     private int pageSize;
     private long totalElements;
     private int totalPages;
-    private boolean first;
     private boolean last;
+    private boolean first;
 
     public PageResponseDto() {}
 
-    // Getters and Setters
+    public PageResponseDto(List<T> content, int pageNumber, int pageSize, long totalElements) {
+        this.content = content;
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+        this.totalElements = totalElements;
+        this.totalPages = (int) Math.ceil((double) totalElements / pageSize);
+        this.last = pageNumber >= totalPages - 1;
+        this.first = pageNumber == 0;
+    }
+
     public List<T> getContent() { return content; }
     public void setContent(List<T> content) { this.content = content; }
 
@@ -29,9 +38,9 @@ public class PageResponseDto<T> {
     public int getTotalPages() { return totalPages; }
     public void setTotalPages(int totalPages) { this.totalPages = totalPages; }
 
-    public boolean isFirst() { return first; }
-    public void setFirst(boolean first) { this.first = first; }
-
     public boolean isLast() { return last; }
     public void setLast(boolean last) { this.last = last; }
+
+    public boolean isFirst() { return first; }
+    public void setFirst(boolean first) { this.first = first; }
 }

@@ -148,18 +148,33 @@ public class ProductServiceImpl implements ProductService {
             entity.setWarrantyPartsCovered((String) dto.getWarranty().get("partsCovered"));
         }
 
+        // ===== FIX START =====
+        // Previously this block built a brand-new ArrayList and called
+        // entity.setFeatures(features), which replaces the Hibernate-managed
+        // collection on `existingProduct` during updateProduct(). Because
+        // `features` has orphanRemoval = true, Hibernate loses track of the
+        // original list it was managing and throws:
+        //   "A collection with orphan deletion was no longer referenced by
+        //    the owning entity instance: ProductEntity.features"
+        //
+        // Fix: clear the SAME collection instance that's already on the
+        // entity, then add the new items into it. This keeps Hibernate's
+        // internal tracking intact for both create (where the list starts
+        // empty anyway) and update (where it's the real managed list).
         if (dto.getFeatures() != null) {
-            List<ProductEntity.Feature> features = new ArrayList<>();
+            entity.getFeatures().clear();
             for (Map<String, String> featureMap : dto.getFeatures()) {
                 ProductEntity.Feature feature = new ProductEntity.Feature();
                 feature.setFeatureId(featureMap.get("id"));
                 feature.setLabel(featureMap.get("label"));
                 feature.setValue(featureMap.get("value"));
                 feature.setProduct(entity);
-                features.add(feature);
+                entity.getFeatures().add(feature);
             }
-            entity.setFeatures(features);
+        } else {
+            entity.getFeatures().clear();
         }
+        // ===== FIX END =====
 
         entity.setDescription(dto.getDescription());
     }

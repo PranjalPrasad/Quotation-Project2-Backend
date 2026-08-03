@@ -1,18 +1,20 @@
 package com.quo.quotation2.dto.responsedto;
 
 public class ApiResponseDto<T> {
-
     private boolean success;
     private String message;
     private T data;
 
-    public ApiResponseDto() {
-    }
+    public ApiResponseDto() {}
 
     public ApiResponseDto(boolean success, String message, T data) {
         this.success = success;
         this.message = message;
         this.data = data;
+    }
+
+    public static <T> ApiResponseDto<T> success(String message) {
+        return new ApiResponseDto<>(true, message, null);
     }
 
     public static <T> ApiResponseDto<T> success(String message, T data) {
@@ -23,28 +25,17 @@ public class ApiResponseDto<T> {
         return new ApiResponseDto<>(false, message, null);
     }
 
-    public boolean isSuccess() {
-        return success;
+    public static <T> ApiResponseDto<T> error(String message, T data) {
+        return new ApiResponseDto<>(false, message, data);
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
+    // Getters and Setters
+    public boolean isSuccess() { return success; }
+    public void setSuccess(boolean success) { this.success = success; }
 
-    public String getMessage() {
-        return message;
-    }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
+    public T getData() { return data; }
+    public void setData(T data) { this.data = data; }
 }
-
