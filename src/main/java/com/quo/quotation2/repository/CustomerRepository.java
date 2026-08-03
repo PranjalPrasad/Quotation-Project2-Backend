@@ -6,9 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByMobilePrimary(String mobilePrimary);
     Optional<Customer> findByCustomerCode(String customerCode);
     boolean existsByMobilePrimary(String mobilePrimary);
+
+    java.util.List<Customer> findByDeletedAtIsNull();
+    java.util.List<Customer> findByNameContainingIgnoreCaseAndDeletedAtIsNull(String name);
 }

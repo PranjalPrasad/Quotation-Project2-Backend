@@ -151,10 +151,13 @@ public class QuotationServiceImpl implements QuotationService {
             item.setProduction(itemDto.getProduction());
             item.setPower(itemDto.getPower());
 
+            // ✅ FIX: product is looked up by SKU (ProductEntity.sku), not a "product code".
+            // The old code referenced a non-existent `Product` type, `findByProductCode(...)`,
+            // and `getImage()` — none of which exist on the current ProductEntity/ProductRepository.
             if (itemDto.getProductId() != null) {
-                Optional<Product> product = productRepository.findByProductCode(itemDto.getProductId());
-                if (product.isPresent() && product.get().getImage() != null) {
-                    item.setImage(product.get().getImage());
+                Optional<ProductEntity> product = productRepository.findBySku(itemDto.getProductId());
+                if (product.isPresent() && product.get().getThumbnailImage() != null) {
+                    item.setImage(product.get().getThumbnailImage());
                 }
             }
 
@@ -317,10 +320,11 @@ public class QuotationServiceImpl implements QuotationService {
             item.setProduction(itemDto.getProduction());
             item.setPower(itemDto.getPower());
 
+            // ✅ FIX: same corrected SKU-based lookup as createQuotation()
             if (itemDto.getProductId() != null) {
-                Optional<Product> product = productRepository.findByProductCode(itemDto.getProductId());
-                if (product.isPresent() && product.get().getImage() != null) {
-                    item.setImage(product.get().getImage());
+                Optional<ProductEntity> product = productRepository.findBySku(itemDto.getProductId());
+                if (product.isPresent() && product.get().getThumbnailImage() != null) {
+                    item.setImage(product.get().getThumbnailImage());
                 }
             }
 

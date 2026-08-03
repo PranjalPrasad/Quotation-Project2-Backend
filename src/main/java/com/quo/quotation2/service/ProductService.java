@@ -1,17 +1,29 @@
 package com.quo.quotation2.service;
 
-import com.quo.quotation2.dto.requestdto.ProductDto;
-import com.quo.quotation2.entity.Product;
-import org.springframework.web.multipart.MultipartFile;
+import com.quo.quotation2.dto.requestdto.ProductRequestDto;
+import com.quo.quotation2.dto.responsedto.ProductResponseDto;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
-    Product createProduct(ProductDto productDto, MultipartFile imageFile) throws IOException;
-    Product updateProduct(Long id, ProductDto productDto, MultipartFile imageFile) throws IOException;
-    Product getProduct(Long id);
-    List<Product> getAllProducts();
-    byte[] getProductImage(Long id);
+
+    ProductResponseDto createProduct(ProductRequestDto requestDto);
+
+    ProductResponseDto updateProduct(Long id, ProductRequestDto requestDto);
+
+    ProductResponseDto getProductById(Long id);
+
+    ProductResponseDto getProductBySku(String sku);
+
+    List<ProductResponseDto> getAllProducts();
+
+    List<ProductResponseDto> getProductsByCategory(String category);
+
+    List<ProductResponseDto> getLowStockProducts();
+
+    List<ProductResponseDto> searchProducts(String keyword);
+
     void deleteProduct(Long id);
+
+    ProductResponseDto updateProductStatus(Long id, String status);
 }

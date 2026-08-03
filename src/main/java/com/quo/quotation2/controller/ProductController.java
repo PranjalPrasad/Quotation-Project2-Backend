@@ -1,75 +1,103 @@
 package com.quo.quotation2.controller;
 
-import com.quo.quotation2.dto.requestdto.ProductDto;
+import com.quo.quotation2.dto.requestdto.ProductRequestDto;
 import com.quo.quotation2.dto.responsedto.ApiResponseDto;
-import com.quo.quotation2.entity.Product;
+import com.quo.quotation2.dto.responsedto.ProductResponseDto;
 import com.quo.quotation2.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api")
 public class ProductController {
 
-    private final ProductService productService;
+    @Autowired
+    private ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+    // ✅ @PostMapping ki jagah @RequestMapping use kiya
+    @RequestMapping(value = "/create-product", method = RequestMethod.POST)
+    public ResponseEntity<ApiResponseDto<ProductResponseDto>> createProduct(
+            @RequestPart("product") ProductRequestDto productRequestDto,
+            @RequestPart(value = "thumbnailFile", required = false) MultipartFile thumbnailFile,
+            @RequestPart(value = "galleryFiles", required = false) List<MultipartFile> galleryFiles,
+            @RequestPart(value = "brochurePdfFile", required = false) MultipartFile brochurePdfFile) {
 
-    // ✅ CREATE Product with Image using RequestPart
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponseDto<Product>> createProduct(
-            @RequestPart("product") ProductDto productDto,
-            @RequestPart(value = "image", required = false) MultipartFile imageFile) throws IOException {
+        productRequestDto.setThumbnailFile(thumbnailFile);
+        productRequestDto.setGalleryFiles(galleryFiles);
+        productRequestDto.setBrochurePdfFile(brochurePdfFile);
 
-        Product product = productService.createProduct(productDto, imageFile);
+        ProductResponseDto response = productService.createProduct(productRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponseDto.success("Product created successfully", product));
+                .body(ApiResponseDto.success("Product created successfully", response));
     }
 
-    // ✅ UPDATE Product with Image using RequestPart
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponseDto<Product>> updateProduct(
+    @GetMapping("/products")
+    public ResponseEntity<ApiResponseDto<List<ProductResponseDto>>> getAllProducts() {
+        List<ProductResponseDto> responses = productService.getAllProducts();
+        return ResponseEntity.ok(ApiResponseDto.success("Products fetched successfully", responses));
+    }
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<ApiResponseDto<ProductResponseDto>> getProductById(@PathVariable Long id) {
+        ProductResponseDto response = productService.getProductById(id);
+        return ResponseEntity.ok(ApiResponseDto.success("Product fetched successfully", response));
+    }
+
+    @GetMapping("/products/sku/{sku}")
+    public ResponseEntity<ApiResponseDto<ProductResponseDto>> getProductBySku(@PathVariable String sku) {
+        ProductResponseDto response = productService.getProductBySku(sku);
+        return ResponseEntity.ok(ApiResponseDto.success("Product fetched successfully", response));
+    }
+
+    @GetMapping("/products/category/{category}")
+    public ResponseEntity<ApiResponseDto<List<ProductResponseDto>>> getProductsByCategory(@PathVariable String category) {
+        List<ProductResponseDto> responses = productService.getProductsByCategory(category);
+        return ResponseEntity.ok(ApiResponseDto.success("Products fetched successfully", responses));
+    }
+
+    @GetMapping("/products/low-stock")
+    public ResponseEntity<ApiResponseDto<List<ProductResponseDto>>> getLowStockProducts() {
+        List<ProductResponseDto> responses = productService.getLowStockProducts();
+        return ResponseEntity.ok(ApiResponseDto.success("Low stock products fetched successfully", responses));
+    }
+
+    @GetMapping("/products/search")
+    public ResponseEntity<ApiResponseDto<List<ProductResponseDto>>> searchProducts(@RequestParam String keyword) {
+        List<ProductResponseDto> responses = productService.searchProducts(keyword);
+        return ResponseEntity.ok(ApiResponseDto.success("Search results fetched successfully", responses));
+    }
+
+    // ✅ PUT bhi change karo
+    @RequestMapping(value = "/products/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<ApiResponseDto<ProductResponseDto>> updateProduct(
             @PathVariable Long id,
-            @RequestPart("product") ProductDto productDto,
-            @RequestPart(value = "image", required = false) MultipartFile imageFile) throws IOException {
+            @RequestPart("product") ProductRequestDto productRequestDto,
+            @RequestPart(value = "thumbnailFile", required = false) MultipartFile thumbnailFile,
+            @RequestPart(value = "galleryFiles", required = false) List<MultipartFile> galleryFiles,
+            @RequestPart(value = "brochurePdfFile", required = false) MultipartFile brochurePdfFile) {
 
-        Product product = productService.updateProduct(id, productDto, imageFile);
-        return ResponseEntity.ok(ApiResponseDto.success("Product updated successfully", product));
+        productRequestDto.setThumbnailFile(thumbnailFile);
+        productRequestDto.setGalleryFiles(galleryFiles);
+        productRequestDto.setBrochurePdfFile(brochurePdfFile);
+
+        ProductResponseDto response = productService.updateProduct(id, productRequestDto);
+        return ResponseEntity.ok(ApiResponseDto.success("Product updated successfully", response));
     }
 
-    // GET Product by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponseDto<Product>> getProduct(@PathVariable Long id) {
-        Product product = productService.getProduct(id);
-        return ResponseEntity.ok(ApiResponseDto.success("Product retrieved successfully", product));
+    @PatchMapping("/products/{id}/status")
+    public ResponseEntity<ApiResponseDto<ProductResponseDto>> updateProductStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+        ProductResponseDto response = productService.updateProductStatus(id, status);
+        return ResponseEntity.ok(ApiResponseDto.success("Product status updated successfully", response));
     }
 
-    // GET All Products
-    @GetMapping
-    public ResponseEntity<ApiResponseDto<List<Product>>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(ApiResponseDto.success("Products retrieved successfully", products));
-    }
-
-    // GET Product Image
-    @GetMapping("/{id}/image")
-    public ResponseEntity<byte[]> getProductImage(@PathVariable Long id) {
-        byte[] image = productService.getProductImage(id);
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(image);
-    }
-
-    // DELETE Product (Soft Delete)
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/products/{id}")
     public ResponseEntity<ApiResponseDto<Void>> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(ApiResponseDto.success("Product deleted successfully", null));
