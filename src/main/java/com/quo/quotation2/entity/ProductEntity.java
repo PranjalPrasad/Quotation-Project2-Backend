@@ -78,17 +78,17 @@ public class ProductEntity {
     private List<Feature> features = new ArrayList<>();
 
     @Lob
-    @Column(name = "thumbnail_image")
+    @Column(name = "thumbnail_image", columnDefinition = "LONGBLOB")
     private byte[] thumbnailImage;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "product_gallery", joinColumns = @JoinColumn(name = "product_id"))
     @Lob
-    @Column(name = "gallery_image")
+    @Column(name = "gallery_image", columnDefinition = "LONGBLOB")
     private List<byte[]> galleryImages = new ArrayList<>();
 
     @Lob
-    @Column(name = "brochure_pdf")
+    @Column(name = "brochure_pdf", columnDefinition = "LONGBLOB")
     private byte[] brochurePdf;
 
     @Column(length = 1000)
