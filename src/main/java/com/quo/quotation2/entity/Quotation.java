@@ -1,6 +1,8 @@
 package com.quo.quotation2.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,9 @@ public class Quotation {
     @Column(name = "quote_date")
     private LocalDateTime quoteDate;
 
+    @Column(name = "date")
+    private LocalDate date;
+
     @Column(name = "valid_until")
     private LocalDateTime validUntil;
 
@@ -31,9 +36,6 @@ public class Quotation {
 
     @Column(name = "is_inter_state")
     private Boolean isInterState;
-
-    @Column(name = "site_type")
-    private String siteType;
 
     @Column(name = "delivery_timeline")
     private String deliveryTimeline;
@@ -101,6 +103,20 @@ public class Quotation {
     @Column(name = "payment_type")
     private String paymentType;
 
+    // Payment Terms - stored as fields on Quotation
+    @Column(name = "advance_percent")
+    private Double advancePercent;
+
+    @Column(name = "material_percent")
+    private Double materialPercent;
+
+    @Column(name = "installation_percent")
+    private Double installationPercent;
+
+    @Column(name = "balance_percent")
+    private Double balancePercent;
+
+    // Bank Details
     @Column(name = "bank_account_name")
     private String bankAccountName;
 
@@ -116,12 +132,57 @@ public class Quotation {
     @Column(name = "bank_branch")
     private String bankBranch;
 
+    // Plant Overview fields
+    @Column(name = "plant_model")
+    private String plantModel;
+
+    @Column(name = "plant_production_capacity")
+    private String plantProductionCapacity;
+
+    @Column(name = "plant_bricks_size")
+    private String plantBricksSize;
+
+    @Column(name = "plant_pallet_size")
+    private String plantPalletSize;
+
+    @Column(name = "plant_shed_area")
+    private String plantShedArea;
+
+    @Column(name = "plant_total_land")
+    private String plantTotalLand;
+
+    @Column(name = "plant_connected_power")
+    private String plantConnectedPower;
+
+    @Column(name = "plant_labour_requirement")
+    private String plantLabourRequirement;
+
+    // Terms & Conditions
     @Column(name = "terms_template_version")
     private String termsTemplateVersion;
 
-    @Column(name = "terms_categories_applied", columnDefinition = "json")
+    @Column(name = "terms_categories_applied", columnDefinition = "JSON")
     private String termsCategoriesApplied;
 
+    // Additional Notes
+    @Column(name = "additional_notes", columnDefinition = "TEXT")
+    private String additionalNotes;
+
+    // Approval
+    @Column(name = "approved_by")
+    private String approvedBy;
+
+    @Column(name = "approval_date")
+    private LocalDate approvalDate;
+
+    @Column(name = "approval_notes")
+    private String approvalNotes;
+
+    // History as JSON
+    @Column(name = "history", columnDefinition = "JSON")
+    private String history;
+
+    // Metadata
     @Column(name = "created_by")
     private String createdBy;
 
@@ -143,16 +204,29 @@ public class Quotation {
     @OneToMany(mappedBy = "quotation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<QuotationItem> items = new ArrayList<>();
 
-    @OneToOne(mappedBy = "quotation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private QuotationPaymentTerms paymentTerms;
-
-    // Constructors
     public Quotation() {
         this.status = "Pending";
         this.convertedToInvoice = false;
+        this.isInterState = false;
+        this.transportCharge = 0.0;
+        this.loadingCharge = 0.0;
+        this.otherCharge = 0.0;
+        this.discountValue = 0.0;
+        this.discountAmount = 0.0;
+        this.itemsSubtotal = 0.0;
+        this.gstPercent = 18.0;
+        this.grandTotal = 0.0;
+        this.taxableAmount = 0.0;
+        this.cgstAmount = 0.0;
+        this.sgstAmount = 0.0;
+        this.igstAmount = 0.0;
+        this.cgstPercent = 0.0;
+        this.sgstPercent = 0.0;
+        this.igstPercent = 0.0;
     }
 
-    // Getters and Setters
+    // ======== GETTERS AND SETTERS ========
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -161,6 +235,9 @@ public class Quotation {
 
     public LocalDateTime getQuoteDate() { return quoteDate; }
     public void setQuoteDate(LocalDateTime quoteDate) { this.quoteDate = quoteDate; }
+
+    public LocalDate getDate() { return date; }
+    public void setDate(LocalDate date) { this.date = date; }
 
     public LocalDateTime getValidUntil() { return validUntil; }
     public void setValidUntil(LocalDateTime validUntil) { this.validUntil = validUntil; }
@@ -173,9 +250,6 @@ public class Quotation {
 
     public Boolean getIsInterState() { return isInterState; }
     public void setIsInterState(Boolean isInterState) { this.isInterState = isInterState; }
-
-    public String getSiteType() { return siteType; }
-    public void setSiteType(String siteType) { this.siteType = siteType; }
 
     public String getDeliveryTimeline() { return deliveryTimeline; }
     public void setDeliveryTimeline(String deliveryTimeline) { this.deliveryTimeline = deliveryTimeline; }
@@ -243,6 +317,18 @@ public class Quotation {
     public String getPaymentType() { return paymentType; }
     public void setPaymentType(String paymentType) { this.paymentType = paymentType; }
 
+    public Double getAdvancePercent() { return advancePercent; }
+    public void setAdvancePercent(Double advancePercent) { this.advancePercent = advancePercent; }
+
+    public Double getMaterialPercent() { return materialPercent; }
+    public void setMaterialPercent(Double materialPercent) { this.materialPercent = materialPercent; }
+
+    public Double getInstallationPercent() { return installationPercent; }
+    public void setInstallationPercent(Double installationPercent) { this.installationPercent = installationPercent; }
+
+    public Double getBalancePercent() { return balancePercent; }
+    public void setBalancePercent(Double balancePercent) { this.balancePercent = balancePercent; }
+
     public String getBankAccountName() { return bankAccountName; }
     public void setBankAccountName(String bankAccountName) { this.bankAccountName = bankAccountName; }
 
@@ -258,11 +344,50 @@ public class Quotation {
     public String getBankBranch() { return bankBranch; }
     public void setBankBranch(String bankBranch) { this.bankBranch = bankBranch; }
 
+    public String getPlantModel() { return plantModel; }
+    public void setPlantModel(String plantModel) { this.plantModel = plantModel; }
+
+    public String getPlantProductionCapacity() { return plantProductionCapacity; }
+    public void setPlantProductionCapacity(String plantProductionCapacity) { this.plantProductionCapacity = plantProductionCapacity; }
+
+    public String getPlantBricksSize() { return plantBricksSize; }
+    public void setPlantBricksSize(String plantBricksSize) { this.plantBricksSize = plantBricksSize; }
+
+    public String getPlantPalletSize() { return plantPalletSize; }
+    public void setPlantPalletSize(String plantPalletSize) { this.plantPalletSize = plantPalletSize; }
+
+    public String getPlantShedArea() { return plantShedArea; }
+    public void setPlantShedArea(String plantShedArea) { this.plantShedArea = plantShedArea; }
+
+    public String getPlantTotalLand() { return plantTotalLand; }
+    public void setPlantTotalLand(String plantTotalLand) { this.plantTotalLand = plantTotalLand; }
+
+    public String getPlantConnectedPower() { return plantConnectedPower; }
+    public void setPlantConnectedPower(String plantConnectedPower) { this.plantConnectedPower = plantConnectedPower; }
+
+    public String getPlantLabourRequirement() { return plantLabourRequirement; }
+    public void setPlantLabourRequirement(String plantLabourRequirement) { this.plantLabourRequirement = plantLabourRequirement; }
+
     public String getTermsTemplateVersion() { return termsTemplateVersion; }
     public void setTermsTemplateVersion(String termsTemplateVersion) { this.termsTemplateVersion = termsTemplateVersion; }
 
     public String getTermsCategoriesApplied() { return termsCategoriesApplied; }
     public void setTermsCategoriesApplied(String termsCategoriesApplied) { this.termsCategoriesApplied = termsCategoriesApplied; }
+
+    public String getAdditionalNotes() { return additionalNotes; }
+    public void setAdditionalNotes(String additionalNotes) { this.additionalNotes = additionalNotes; }
+
+    public String getApprovedBy() { return approvedBy; }
+    public void setApprovedBy(String approvedBy) { this.approvedBy = approvedBy; }
+
+    public LocalDate getApprovalDate() { return approvalDate; }
+    public void setApprovalDate(LocalDate approvalDate) { this.approvalDate = approvalDate; }
+
+    public String getApprovalNotes() { return approvalNotes; }
+    public void setApprovalNotes(String approvalNotes) { this.approvalNotes = approvalNotes; }
+
+    public String getHistory() { return history; }
+    public void setHistory(String history) { this.history = history; }
 
     public String getCreatedBy() { return createdBy; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
@@ -284,7 +409,4 @@ public class Quotation {
 
     public List<QuotationItem> getItems() { return items; }
     public void setItems(List<QuotationItem> items) { this.items = items; }
-
-    public QuotationPaymentTerms getPaymentTerms() { return paymentTerms; }
-    public void setPaymentTerms(QuotationPaymentTerms paymentTerms) { this.paymentTerms = paymentTerms; }
 }

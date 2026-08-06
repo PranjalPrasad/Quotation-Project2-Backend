@@ -30,11 +30,13 @@ public class QuotationResponseDto {
     private BankDto bank;
     private Map<String, Object> termsAndConditions;
     private String additionalNotes;
-    private List<ProductImageDto> productImages;
+    private PlantOverviewDto plantOverview;
+    private ApprovalDto approval;
+    private List<Map<String, Object>> history;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Getters and Setters (copy from QuotationRequestDto inner classes pattern)
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -110,8 +112,14 @@ public class QuotationResponseDto {
     public String getAdditionalNotes() { return additionalNotes; }
     public void setAdditionalNotes(String additionalNotes) { this.additionalNotes = additionalNotes; }
 
-    public List<ProductImageDto> getProductImages() { return productImages; }
-    public void setProductImages(List<ProductImageDto> productImages) { this.productImages = productImages; }
+    public PlantOverviewDto getPlantOverview() { return plantOverview; }
+    public void setPlantOverview(PlantOverviewDto plantOverview) { this.plantOverview = plantOverview; }
+
+    public ApprovalDto getApproval() { return approval; }
+    public void setApproval(ApprovalDto approval) { this.approval = approval; }
+
+    public List<Map<String, Object>> getHistory() { return history; }
+    public void setHistory(List<Map<String, Object>> history) { this.history = history; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
@@ -119,7 +127,8 @@ public class QuotationResponseDto {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
-    // Inner DTO classes (same as in QuotationRequestDto but with proper imports)
+    // ======== INNER CLASSES ========
+
     public static class CustomerDto {
         private String name;
         private String mobilePrimary;
@@ -167,7 +176,7 @@ public class QuotationResponseDto {
         private String shedSize;
         private Integer labor;
         private String production;
-        private String imageUrl;
+        private String imageUrl;  // This will be populated from product table
 
         public String getId() { return id; }
         public void setId(String id) { this.id = id; }
@@ -276,16 +285,44 @@ public class QuotationResponseDto {
         public void setBranch(String branch) { this.branch = branch; }
     }
 
-    public static class ProductImageDto {
-        private String productId;
-        private String productName;
-        private String imageUrl;
+    public static class PlantOverviewDto {
+        private String model;
+        private String productionCapacity;
+        private String bricksSize;
+        private String palletSize;
+        private String requiredShedArea;
+        private String totalLand;
+        private String connectedPower;
+        private String labourRequirement;
 
-        public String getProductId() { return productId; }
-        public void setProductId(String productId) { this.productId = productId; }
-        public String getProductName() { return productName; }
-        public void setProductName(String productName) { this.productName = productName; }
-        public String getImageUrl() { return imageUrl; }
-        public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+        public String getModel() { return model; }
+        public void setModel(String model) { this.model = model; }
+        public String getProductionCapacity() { return productionCapacity; }
+        public void setProductionCapacity(String productionCapacity) { this.productionCapacity = productionCapacity; }
+        public String getBricksSize() { return bricksSize; }
+        public void setBricksSize(String bricksSize) { this.bricksSize = bricksSize; }
+        public String getPalletSize() { return palletSize; }
+        public void setPalletSize(String palletSize) { this.palletSize = palletSize; }
+        public String getRequiredShedArea() { return requiredShedArea; }
+        public void setRequiredShedArea(String requiredShedArea) { this.requiredShedArea = requiredShedArea; }
+        public String getTotalLand() { return totalLand; }
+        public void setTotalLand(String totalLand) { this.totalLand = totalLand; }
+        public String getConnectedPower() { return connectedPower; }
+        public void setConnectedPower(String connectedPower) { this.connectedPower = connectedPower; }
+        public String getLabourRequirement() { return labourRequirement; }
+        public void setLabourRequirement(String labourRequirement) { this.labourRequirement = labourRequirement; }
+    }
+
+    public static class ApprovalDto {
+        private String approvedBy;
+        private String approvalDate;
+        private String notes;
+
+        public String getApprovedBy() { return approvedBy; }
+        public void setApprovedBy(String approvedBy) { this.approvedBy = approvedBy; }
+        public String getApprovalDate() { return approvalDate; }
+        public void setApprovalDate(String approvalDate) { this.approvalDate = approvalDate; }
+        public String getNotes() { return notes; }
+        public void setNotes(String notes) { this.notes = notes; }
     }
 }

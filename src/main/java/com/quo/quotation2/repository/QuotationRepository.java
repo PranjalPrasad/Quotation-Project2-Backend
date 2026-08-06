@@ -8,11 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface QuotationRepository extends JpaRepository<Quotation, Long> {
+
     Optional<Quotation> findByQuoteNo(String quoteNo);
 
     @Query("SELECT q FROM Quotation q WHERE q.deletedAt IS NULL " +
@@ -30,5 +33,12 @@ public interface QuotationRepository extends JpaRepository<Quotation, Long> {
     Integer findMaxQuoteNumber();
 
     @Query("SELECT q FROM Quotation q WHERE q.deletedAt IS NULL AND q.status = 'Pending' AND q.validUntil < :now")
-    java.util.List<Quotation> findExpiredPendingQuotations(@Param("now") LocalDateTime now);
+    List<Quotation> findExpiredPendingQuotations(@Param("now") LocalDateTime now);
+
+    long countByStatus(String status);
+
+    long countByDate(LocalDate date);
+
+    @Query("SELECT SUM(q.grandTotal) FROM Quotation q WHERE q.deletedAt IS NULL")
+    Double sumGrandTotal();
 }

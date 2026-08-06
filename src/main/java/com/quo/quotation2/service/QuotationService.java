@@ -8,6 +8,8 @@ import com.quo.quotation2.dto.responsedto.QuotationListResponseDto;
 import com.quo.quotation2.dto.responsedto.QuotationResponseDto;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Map;
+
 public interface QuotationService {
     QuotationResponseDto createQuotation(QuotationRequestDto requestDto, String authHeader);
     QuotationResponseDto getQuotation(Long id);
@@ -18,5 +20,6 @@ public interface QuotationService {
     QuotationResponseDto convertToInvoice(Long id, ConvertToInvoiceRequestDto requestDto, String authHeader);
     QuotationResponseDto duplicateQuotation(Long id, String authHeader);
     void deleteQuotation(Long id, String authHeader);
-    void processExpiredQuotations(); // <-- ADD THIS METHOD
+    void processExpiredQuotations();
+    Map<String, Object> getDashboardStats();
 }

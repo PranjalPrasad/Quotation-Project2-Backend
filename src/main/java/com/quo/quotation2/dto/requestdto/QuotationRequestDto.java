@@ -18,7 +18,7 @@ public class QuotationRequestDto {
     private Double taxable;
     private Double total;
     private Double amount;
-    private Double itemsTotal;  // <-- ADD THIS FIELD
+    private Double itemsTotal;
     private String deliveryTimeline;
     private String validUntil;
     private PaymentTermsDto paymentTerms;
@@ -26,7 +26,7 @@ public class QuotationRequestDto {
     private BankDto bank;
     private Map<String, Object> termsAndConditions;
     private String additionalNotes;
-    private List<ProductImageDto> productImages;
+    private PlantOverviewDto plantOverview;
 
     // Getters and Setters
     public String getQuoteNo() { return quoteNo; }
@@ -71,8 +71,8 @@ public class QuotationRequestDto {
     public Double getAmount() { return amount; }
     public void setAmount(Double amount) { this.amount = amount; }
 
-    public Double getItemsTotal() { return itemsTotal; }  // <-- ADD THIS GETTER
-    public void setItemsTotal(Double itemsTotal) { this.itemsTotal = itemsTotal; }  // <-- ADD THIS SETTER
+    public Double getItemsTotal() { return itemsTotal; }
+    public void setItemsTotal(Double itemsTotal) { this.itemsTotal = itemsTotal; }
 
     public String getDeliveryTimeline() { return deliveryTimeline; }
     public void setDeliveryTimeline(String deliveryTimeline) { this.deliveryTimeline = deliveryTimeline; }
@@ -95,11 +95,13 @@ public class QuotationRequestDto {
     public String getAdditionalNotes() { return additionalNotes; }
     public void setAdditionalNotes(String additionalNotes) { this.additionalNotes = additionalNotes; }
 
-    public List<ProductImageDto> getProductImages() { return productImages; }
-    public void setProductImages(List<ProductImageDto> productImages) { this.productImages = productImages; }
+    public PlantOverviewDto getPlantOverview() { return plantOverview; }
+    public void setPlantOverview(PlantOverviewDto plantOverview) { this.plantOverview = plantOverview; }
 
-    // Inner DTO classes (keep these as they are)
+    // ======== INNER CLASSES ========
+
     public static class CustomerDto {
+        private Long customerId;
         private String name;
         private String mobilePrimary;
         private String mobileSecondary;
@@ -110,6 +112,8 @@ public class QuotationRequestDto {
         private String pincode;
         private String gst;
 
+        public Long getCustomerId() { return customerId; }
+        public void setCustomerId(Long customerId) { this.customerId = customerId; }
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
         public String getMobilePrimary() { return mobilePrimary; }
@@ -134,6 +138,7 @@ public class QuotationRequestDto {
         private String productId;
         private String name;
         private String category;
+        private String sectionCode;
         private Double qty;
         private Double rate;
         private Double amount;
@@ -145,14 +150,18 @@ public class QuotationRequestDto {
         private String shedSize;
         private Integer labor;
         private String production;
+        private String power;
         private String imageUrl;
 
+        // Getters and Setters
         public String getProductId() { return productId; }
         public void setProductId(String productId) { this.productId = productId; }
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
         public String getCategory() { return category; }
         public void setCategory(String category) { this.category = category; }
+        public String getSectionCode() { return sectionCode; }
+        public void setSectionCode(String sectionCode) { this.sectionCode = sectionCode; }
         public Double getQty() { return qty; }
         public void setQty(Double qty) { this.qty = qty; }
         public Double getRate() { return rate; }
@@ -175,6 +184,8 @@ public class QuotationRequestDto {
         public void setLabor(Integer labor) { this.labor = labor; }
         public String getProduction() { return production; }
         public void setProduction(String production) { this.production = production; }
+        public String getPower() { return power; }
+        public void setPower(String power) { this.power = power; }
         public String getImageUrl() { return imageUrl; }
         public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     }
@@ -230,16 +241,31 @@ public class QuotationRequestDto {
         public void setBranch(String branch) { this.branch = branch; }
     }
 
-    public static class ProductImageDto {
-        private String productId;
-        private String productName;
-        private String imageUrl;
+    public static class PlantOverviewDto {
+        private String model;
+        private String productionCapacity;
+        private String bricksSize;
+        private String palletSize;
+        private String requiredShedArea;
+        private String totalLand;
+        private String connectedPower;
+        private String labourRequirement;
 
-        public String getProductId() { return productId; }
-        public void setProductId(String productId) { this.productId = productId; }
-        public String getProductName() { return productName; }
-        public void setProductName(String productName) { this.productName = productName; }
-        public String getImageUrl() { return imageUrl; }
-        public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+        public String getModel() { return model; }
+        public void setModel(String model) { this.model = model; }
+        public String getProductionCapacity() { return productionCapacity; }
+        public void setProductionCapacity(String productionCapacity) { this.productionCapacity = productionCapacity; }
+        public String getBricksSize() { return bricksSize; }
+        public void setBricksSize(String bricksSize) { this.bricksSize = bricksSize; }
+        public String getPalletSize() { return palletSize; }
+        public void setPalletSize(String palletSize) { this.palletSize = palletSize; }
+        public String getRequiredShedArea() { return requiredShedArea; }
+        public void setRequiredShedArea(String requiredShedArea) { this.requiredShedArea = requiredShedArea; }
+        public String getTotalLand() { return totalLand; }
+        public void setTotalLand(String totalLand) { this.totalLand = totalLand; }
+        public String getConnectedPower() { return connectedPower; }
+        public void setConnectedPower(String connectedPower) { this.connectedPower = connectedPower; }
+        public String getLabourRequirement() { return labourRequirement; }
+        public void setLabourRequirement(String labourRequirement) { this.labourRequirement = labourRequirement; }
     }
 }

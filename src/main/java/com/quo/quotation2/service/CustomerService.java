@@ -1,7 +1,6 @@
 package com.quo.quotation2.service;
 
-
-import com.quo.quotation2.dto.CustomerDto;
+import com.quo.quotation2.dto.requestdto.CustomerDto;
 import com.quo.quotation2.entity.Customer;
 
 import java.util.List;

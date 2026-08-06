@@ -1,4 +1,4 @@
-package com.quo.quotation2.dto;
+package com.quo.quotation2.dto.requestdto;
 
 public class CustomerDto {
     private Long id;

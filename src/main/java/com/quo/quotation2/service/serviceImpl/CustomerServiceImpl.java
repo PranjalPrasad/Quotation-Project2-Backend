@@ -1,6 +1,6 @@
 package com.quo.quotation2.service.serviceImpl;
 
-import com.quo.quotation2.dto.CustomerDto;
+import com.quo.quotation2.dto.requestdto.CustomerDto;
 import com.quo.quotation2.entity.Customer;
 import com.quo.quotation2.exception.CustomerNotFoundException;
 import com.quo.quotation2.exception.QuotationException;

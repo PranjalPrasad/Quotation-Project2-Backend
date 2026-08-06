@@ -1,6 +1,5 @@
 package com.quo.quotation2.controller;
-
-import com.quo.quotation2.dto.CustomerDto;
+import com.quo.quotation2.dto.requestdto.CustomerDto;
 import com.quo.quotation2.dto.responsedto.ApiResponseDto;
 import com.quo.quotation2.entity.Customer;
 import com.quo.quotation2.service.CustomerService;

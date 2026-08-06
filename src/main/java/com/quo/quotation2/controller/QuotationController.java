@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/quotations")
 public class QuotationController {
@@ -24,7 +26,7 @@ public class QuotationController {
         this.quotationService = quotationService;
     }
 
-    @PostMapping
+    @PostMapping("/create-quotation")
     public ResponseEntity<ApiResponseDto<QuotationResponseDto>> createQuotation(
             @RequestBody QuotationRequestDto requestDto,
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
@@ -33,19 +35,19 @@ public class QuotationController {
                 .body(ApiResponseDto.success("Quotation created successfully", response));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get-quotation/{id}")
     public ResponseEntity<ApiResponseDto<QuotationResponseDto>> getQuotation(@PathVariable Long id) {
         QuotationResponseDto response = quotationService.getQuotation(id);
         return ResponseEntity.ok(ApiResponseDto.success("Quotation retrieved successfully", response));
     }
 
-    @GetMapping("/by-quote-no/{quoteNo}")
+    @GetMapping("/get-quotation-by-quoteno/by-quote-no/{quoteNo}")
     public ResponseEntity<ApiResponseDto<QuotationResponseDto>> getQuotationByQuoteNo(@PathVariable String quoteNo) {
         QuotationResponseDto response = quotationService.getQuotationByQuoteNo(quoteNo);
         return ResponseEntity.ok(ApiResponseDto.success("Quotation retrieved successfully", response));
     }
 
-    @GetMapping
+    @GetMapping("/get-quotations")
     public ResponseEntity<ApiResponseDto<PageResponseDto<QuotationListResponseDto>>> getQuotations(
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String dateFrom,
@@ -65,7 +67,7 @@ public class QuotationController {
         return ResponseEntity.ok(ApiResponseDto.success("Quotations retrieved successfully", response));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update-quotation/{id}")
     public ResponseEntity<ApiResponseDto<QuotationResponseDto>> updateQuotation(
             @PathVariable Long id,
             @RequestBody QuotationRequestDto requestDto,
@@ -74,7 +76,7 @@ public class QuotationController {
         return ResponseEntity.ok(ApiResponseDto.success("Quotation updated successfully", response));
     }
 
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/update-status/{id}/status")
     public ResponseEntity<ApiResponseDto<QuotationResponseDto>> updateStatus(
             @PathVariable Long id,
             @RequestBody StatusUpdateRequestDto requestDto,
@@ -83,7 +85,7 @@ public class QuotationController {
         return ResponseEntity.ok(ApiResponseDto.success("Status updated successfully", response));
     }
 
-    @PostMapping("/{id}/convert-to-invoice")
+    @PostMapping("/convert-to-invoice/{id}/convert-to-invoice")
     public ResponseEntity<ApiResponseDto<QuotationResponseDto>> convertToInvoice(
             @PathVariable Long id,
             @RequestBody ConvertToInvoiceRequestDto requestDto,
@@ -92,7 +94,7 @@ public class QuotationController {
         return ResponseEntity.ok(ApiResponseDto.success("Quotation converted to invoice successfully", response));
     }
 
-    @PostMapping("/{id}/duplicate")
+    @PostMapping("/duplicate-quotation/{id}/duplicate")
     public ResponseEntity<ApiResponseDto<QuotationResponseDto>> duplicateQuotation(
             @PathVariable Long id,
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
@@ -101,11 +103,19 @@ public class QuotationController {
                 .body(ApiResponseDto.success("Quotation duplicated successfully", response));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete-quotation/{id}")
     public ResponseEntity<ApiResponseDto<Void>> deleteQuotation(
             @PathVariable Long id,
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
         quotationService.deleteQuotation(id, authHeader);
         return ResponseEntity.ok(ApiResponseDto.success("Quotation deleted successfully", null));
+    }
+
+    // Add to QuotationController.java
+
+    @GetMapping("/dashboard-stats")
+    public ResponseEntity<ApiResponseDto<Map<String, Object>>> getDashboardStats() {
+        Map<String, Object> stats = quotationService.getDashboardStats();
+        return ResponseEntity.ok(ApiResponseDto.success("Dashboard stats retrieved successfully", stats));
     }
 }

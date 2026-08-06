@@ -17,8 +17,16 @@ public class QuotationItem {
     @Column(name = "product_id")
     private String productId;
 
+    // Real FK relation to catalog product (nullable — custom/manual items won't have this)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_ref_id")
+    private ProductEntity product;
+
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "category")
+    private String category;
 
     @Column(name = "section_code")
     private String sectionCode;
@@ -62,13 +70,23 @@ public class QuotationItem {
     @Column(name = "power")
     private String power;
 
-    // ✅ IMAGE as LONGBLOB
+    // FIX: was plain @Column (defaults to VARCHAR(255)) which truncated long
+    // product image URLs and threw "Data truncation: Data too long for
+    // column 'image_url'" on insert. Widened to TEXT.
+    @Column(name = "image_url", columnDefinition = "TEXT")
+    private String imageUrl;
+
     @Lob
     @Column(name = "image", columnDefinition = "LONGBLOB")
     private byte[] image;
 
-    // Constructors
-    public QuotationItem() {}
+    public QuotationItem() {
+        this.qty = 1;
+        this.rate = 0.0;
+        this.amount = 0.0;
+        this.inCustomerScope = false;
+        this.gstRate = 18.0;
+    }
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -80,8 +98,14 @@ public class QuotationItem {
     public String getProductId() { return productId; }
     public void setProductId(String productId) { this.productId = productId; }
 
+    public ProductEntity getProduct() { return product; }
+    public void setProduct(ProductEntity product) { this.product = product; }
+
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
     public String getSectionCode() { return sectionCode; }
     public void setSectionCode(String sectionCode) { this.sectionCode = sectionCode; }
@@ -124,6 +148,9 @@ public class QuotationItem {
 
     public String getPower() { return power; }
     public void setPower(String power) { this.power = power; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
     public byte[] getImage() { return image; }
     public void setImage(byte[] image) { this.image = image; }
