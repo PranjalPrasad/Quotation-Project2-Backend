@@ -41,4 +41,14 @@ public interface QuotationRepository extends JpaRepository<Quotation, Long> {
 
     @Query("SELECT SUM(q.grandTotal) FROM Quotation q WHERE q.deletedAt IS NULL")
     Double sumGrandTotal();
+
+    // ---- Reports: fetch quotations (with items, to avoid N+1) in a date range ----
+    // Pass dateFrom/dateTo = null to mean "no lower/upper bound".
+    @Query("SELECT DISTINCT q FROM Quotation q LEFT JOIN FETCH q.items " +
+            "WHERE q.deletedAt IS NULL " +
+            "AND (:dateFrom IS NULL OR q.date >= :dateFrom) " +
+            "AND (:dateTo IS NULL OR q.date <= :dateTo) " +
+            "ORDER BY q.date DESC")
+    List<Quotation> findForReport(@Param("dateFrom") LocalDate dateFrom,
+                                  @Param("dateTo") LocalDate dateTo);
 }
