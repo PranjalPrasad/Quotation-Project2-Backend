@@ -17,11 +17,14 @@ public class CorsConfig {
                         .allowedOrigins(
                                 "http://127.0.0.1:5500",
                                 "http://localhost:5500",
+                                "http://127.0.0.1:5501",  // Added this
+                                "http://localhost:5501",   // Added this
                                 "http://localhost:3000"
                         )
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .allowCredentials(true)
+                        .maxAge(3600); // Optional: cache preflight response for 1 hour
             }
         };
     }
